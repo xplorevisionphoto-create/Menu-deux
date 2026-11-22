@@ -1,0 +1,46 @@
+MENU À DEUX : installer l'appli sur Android
+===========================================
+
+Cette appli est une appli web installable (PWA). Une fois installée, elle a sa
+propre icône, s'ouvre en plein écran et fonctionne même sans connexion.
+Pas besoin du Play Store, pas de compte, aucune donnée envoyée : les points
+restent enregistrés sur le téléphone.
+
+
+1. Mettre les fichiers en ligne (une seule fois, depuis un ordinateur)
+----------------------------------------------------------------------
+Décompressez l'archive, puis envoyez le dossier sur un hébergeur de sites
+statiques gratuit, par exemple Netlify Drop ou GitHub Pages. Vous obtenez une
+adresse en https, par exemple https://mon-menu.netlify.app
+
+L'adresse doit commencer par https pour que l'installation soit proposée.
+
+
+2. Installer sur le téléphone
+-----------------------------
+- Ouvrez l'adresse dans Chrome sur Android.
+- Touchez le menu (les trois points en haut à droite).
+- Touchez « Installer l'application » (ou « Ajouter à l'écran d'accueil »).
+- L'icône Menu à Deux apparaît parmi vos applis.
+
+Dans l'appli, l'écran Fidélité propose aussi un bouton « Installer sur ce
+téléphone » quand Chrome l'autorise.
+
+
+3. Partager avec d'autres couples
+---------------------------------
+Envoyez simplement l'adresse. Chacun l'ouvre dans Chrome et l'installe de la
+même façon. Chaque téléphone a sa propre carte de points.
+
+
+4. Modifier le menu
+-------------------
+Les entrées, plats, extras et récompenses se trouvent au début du script de
+index.html (listes MENU et REWARDS). Après modification, remplacez le fichier
+sur l'hébergeur : l'appli se met à jour à la prochaine ouverture en ligne.
+
+
+Remarque
+--------
+Ouvrir index.html directement depuis le stockage du téléphone fonctionne pour
+essayer, mais l'installation comme appli demande une adresse https.

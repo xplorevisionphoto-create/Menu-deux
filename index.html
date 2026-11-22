@@ -1,0 +1,552 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Menu à Deux</title>
+<!--PWA-ONLY-START-->
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2A0F33">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Menu à Deux">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>html{box-sizing:border-box;background:#2A0F33;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}</style>
+<!--PWA-ONLY-END-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&family=Inter:wght@400;500;600&display=swap">
+<style>
+:root{
+  --ink:#2B1230;--muted:#6B5873;--plum:#2A0F33;--page:#1B0A22;--ground:#F6F0F8;--card:#FFFFFF;
+  --red:#E5174F;--red-soft:#FCE3EA;--red-ink:#B3103D;--gold:#FFC93C;--line:#E3D6E8;--lilac:#E9D9EE;
+  --idle:#CDB6D6;--disabled:#D9CBDF;--disabled-ink:#5C4A66;
+  --display:'Bricolage Grotesque',system-ui,sans-serif;--body:Inter,system-ui,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--page);color:var(--ink);font-family:var(--body);font-size:14px;line-height:1.4;-webkit-text-size-adjust:100%}
+button{font:inherit;cursor:pointer;border:0;color:inherit;background:none;-webkit-tap-highlight-color:transparent}
+button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+button:disabled{cursor:not-allowed}
+h1,h2,p{margin:0}
+
+.app{height:100%;max-width:520px;margin:0 auto;display:flex;flex-direction:column;background:var(--ground);overflow:hidden}
+
+.top{background:var(--plum);color:#fff;padding:18px max(20px,env(safe-area-inset-right,0px)) 14px max(20px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;gap:6px}
+.toprow{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.top h1{font-family:var(--display);font-weight:800;font-size:28px;line-height:1.05;text-wrap:balance}
+.top p{font-size:14px;color:var(--lilac)}
+.chip{background:var(--gold);color:var(--ink);font-weight:600;font-size:14px;padding:6px 12px;border-radius:999px;white-space:nowrap;font-variant-numeric:tabular-nums}
+
+.tabs{display:flex;gap:8px;padding:14px max(16px,env(safe-area-inset-right,0px)) 6px max(16px,env(safe-area-inset-left,0px))}
+.tab{flex:1;min-width:0;min-height:44px;border-radius:12px;font-weight:600;font-size:14px;background:var(--card);color:var(--ink)}
+.tab.act{background:var(--plum);color:#fff}
+
+.main{flex:1;min-height:0;overflow-y:auto;padding:10px max(16px,env(safe-area-inset-right,0px)) 16px max(16px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;gap:10px}
+.sec{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:4px 0}
+.sec>div{min-width:0}
+h2{font-family:var(--display);font-weight:700;font-size:22px;line-height:1.15}
+.hint{margin-top:2px;font-size:13px;color:var(--muted)}
+.ghost{min-height:44px;padding:0 14px;border-radius:12px;background:var(--card);border:2px solid var(--line);font-weight:600;font-size:13px;white-space:nowrap}
+
+.card{display:flex;align-items:center;gap:12px;padding:14px;border-radius:16px;background:var(--card);border:2px solid transparent}
+.card.on{border-color:var(--red)}
+.card .body{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.name{font-weight:600;font-size:16px;line-height:1.25}
+.desc{font-size:13px;color:var(--muted)}
+.heat{display:flex;align-items:center;gap:4px;margin-top:2px}
+.heat span{font-size:12px;color:var(--muted)}
+.heat .dot{width:8px;height:8px;border-radius:50%;background:var(--line)}
+.heat .dot.on{background:var(--red)}
+.heat .lbl{margin-left:4px}
+.add{min-width:88px;min-height:44px;border-radius:12px;font-weight:600;font-size:14px;background:var(--red-soft);color:var(--red-ink)}
+.card.on .add{background:var(--red);color:#fff}
+
+.bar{padding:10px max(16px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px));background:var(--card);border-top:1px solid var(--line)}
+.cta{width:100%;min-height:50px;border-radius:14px;background:var(--red);color:#fff;font-weight:600;font-size:15px}
+.cta:disabled{background:var(--disabled);color:var(--disabled-ink)}
+
+.row{display:flex;align-items:center;gap:12px;padding:14px;border-radius:16px;background:var(--card)}
+.row .body{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.lab{font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.val{font-size:15px;font-weight:600;line-height:1.3}
+.val.empty{color:var(--muted)}
+.edit{min-height:44px;padding:0 14px;border-radius:12px;background:var(--red-soft);color:var(--red-ink);font-weight:600;font-size:14px}
+.earn{padding:14px 16px;border-radius:16px;background:var(--gold);color:var(--ink);display:flex;align-items:center;justify-content:space-between;gap:12px}
+.earn span{font-size:14px;font-weight:600}
+.earn b{font-family:var(--display);font-weight:800;font-size:24px;white-space:nowrap}
+.note{padding:14px 16px;border-radius:16px;background:var(--card);border:2px dashed var(--line);display:flex;flex-direction:column;gap:4px}
+.note strong{font-size:14px}
+.note span{font-size:13px;color:var(--muted)}
+.banner{padding:12px 16px;border-radius:14px;background:var(--red-soft);color:var(--red-ink);font-size:13px;font-weight:600}
+
+.pcard{padding:18px;border-radius:16px;background:var(--card);display:flex;flex-direction:column;gap:10px}
+.big{font-family:var(--display);font-weight:800;font-size:44px;line-height:1;font-variant-numeric:tabular-nums}
+.big small{font-size:18px;font-weight:700}
+.track{height:10px;border-radius:999px;background:var(--line);overflow:hidden}
+.fill{height:10px;border-radius:999px;background:var(--red)}
+.next{font-size:13px;color:var(--muted)}
+.toast{padding:12px 16px;border-radius:14px;background:var(--gold);color:var(--ink);font-size:14px;font-weight:600}
+.h3{font-family:var(--display);font-weight:700;font-size:20px;padding-top:4px}
+.rw{display:flex;align-items:center;gap:12px;padding:14px;border-radius:16px;background:var(--card)}
+.rw .body{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.rw .name{font-size:15px}
+.cost{font-size:12px;font-weight:600;color:var(--red-ink)}
+.use{min-width:88px;min-height:44px;padding:0 12px;border-radius:12px;font-weight:600;font-size:13px;line-height:1.2;background:var(--red);color:#fff}
+.use:disabled{background:#EEE6F1;color:var(--muted)}
+.reset{display:flex;flex-direction:column;gap:8px;padding:8px 0 4px}
+.reset .two{display:flex;gap:8px}
+.reset .two button{flex:1}
+.danger{min-height:44px;border-radius:12px;background:var(--red);color:#fff;font-weight:600;font-size:14px}
+
+.hist{padding:14px;border-radius:16px;background:var(--card);display:flex;flex-direction:column;gap:6px}
+.hrow{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.when{font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.pts{font-weight:600;font-size:14px;color:var(--red-ink);white-space:nowrap;font-variant-numeric:tabular-nums}
+.pts.out{color:var(--muted)}
+.hl{font-size:14px;line-height:1.45}
+.hl b{font-weight:600;margin-right:6px}
+
+.done{flex:1;min-height:0;overflow-y:auto;padding:32px 24px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center}
+.done h2{font-weight:800;font-size:28px}
+.done p{font-size:15px;color:var(--muted);line-height:1.5}
+.pill{padding:12px 20px;border-radius:999px;background:var(--gold);color:var(--ink);font-weight:600;font-size:15px}
+.cta.fit{width:auto;padding:0 28px;margin-top:8px;min-height:52px;font-size:16px}
+
+.nav{display:flex;background:var(--plum);padding:8px max(8px,env(safe-area-inset-right,0px)) 12px max(8px,env(safe-area-inset-left,0px))}
+.nb{flex:1;min-width:0;min-height:52px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:12px;font-weight:600;color:var(--idle)}
+.nb.act{color:var(--gold)}
+.ico{position:relative;display:flex}
+.badge{position:absolute;top:-6px;right:-10px;min-width:18px;height:18px;padding:0 4px;border-radius:999px;background:var(--red);color:#fff;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center}
+
+.intro{flex:1;min-height:0;overflow-y:auto;background:var(--plum);color:#fff;padding:32px max(24px,env(safe-area-inset-right,0px)) 32px max(24px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;justify-content:center;gap:18px}
+.intro h1{font-family:var(--display);font-weight:800;font-size:34px;line-height:1.05}
+.intro p{font-size:15px;color:var(--lilac);line-height:1.5}
+.intro ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px}
+.intro li{padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.08);font-size:14px;line-height:1.45}
+.intro .go{min-height:52px;border-radius:14px;background:var(--gold);color:var(--ink);font-weight:600;font-size:16px}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<script>
+(function () {
+  'use strict';
+
+  var KEY = 'menu-a-deux-v1';
+  var HEAT = ['', 'Doux', 'Piquant', 'Épicé'];
+  var EARN = { entree: 10, plat: 20, extra: 5 };
+
+  var MENU = {
+    entree: [
+      { id: 'e1', name: 'Baisers dans le cou', desc: 'On prend son temps, lumière tamisée, aucune urgence.', heat: 1 },
+      { id: 'e2', name: 'Massage à l’huile tiède', desc: 'Dix minutes chacun, avec de l’huile chaude et des mains lentes.', heat: 1 },
+      { id: 'e3', name: 'Douche à deux', desc: 'Savon, vapeur et mains baladeuses avant de passer à table.', heat: 1 },
+      { id: 'e4', name: 'Jeu des glaçons', desc: 'Un glaçon, un parcours sur la peau, des frissons garantis.', heat: 2 },
+      { id: 'e5', name: 'Les yeux bandés', desc: 'Un sens en moins, tous les autres en alerte.', heat: 2 },
+      { id: 'e6', name: 'Massage qui dérape', desc: 'Ça commence sagement, puis les mains se perdent.', heat: 2 },
+      { id: 'e7', name: 'Massage et attache', desc: 'Poignets noués avec un foulard, l’autre mène le massage.', heat: 2 },
+      { id: 'e8', name: 'Cuni', desc: 'Le temps qu’il faudra, au rythme de celle qui reçoit.', heat: 2 },
+      { id: 'e9', name: 'Fellation', desc: 'Lente ou gourmande, celui qui reçoit dit quand ralentir.', heat: 2 },
+      { id: 'e10', name: '69', desc: 'On donne et on reçoit en même temps.', heat: 3 }
+    ],
+    plat: [
+      { id: 'p1', name: 'Missionnaire', desc: 'Face à face, regards et baisers. La valeur sûre.', heat: 1 },
+      { id: 'p2', name: 'Cuillère', desc: 'Côte à côte, tendre et lent, parfait pour durer.', heat: 1 },
+      { id: 'p3', name: 'Lotus', desc: 'Assis face à face, enlacés, front contre front.', heat: 2 },
+      { id: 'p4', name: 'Amazone', desc: 'Elle est au-dessus et règle le rythme et l’angle.', heat: 2 },
+      { id: 'p5', name: 'Cowgirl inversé', desc: 'Elle tourne le dos, il profite de la vue.', heat: 2 },
+      { id: 'p6', name: 'Levrette', desc: 'À quatre pattes, rythme au choix, une main libre pour d’autres idées.', heat: 2 },
+      { id: 'p7', name: 'Bord du lit', desc: 'Une autre hauteur, de nouveaux angles.', heat: 2 },
+      { id: 'p8', name: 'Debout contre le mur', desc: 'Pour les envies pressées. On vérifie l’équilibre avant.', heat: 3 },
+      { id: 'p9', name: 'Double pénétration avec dildo', desc: 'Partenaire et jouet en même temps. Beaucoup de lubrifiant, on y va doucement.', heat: 3 },
+      { id: 'p10', name: 'Massage anal et Womanizer', desc: 'Massage doux pendant que le Womanizer travaille. Lubrifiant, patience, communication.', heat: 3 }
+    ],
+    extra: [
+      { id: 'x1', name: 'Lingerie sexy', desc: 'Pour elle, pour lui ou pour les deux, à choisir ensemble.', heat: 1 },
+      { id: 'x2', name: 'Lubrifiant aromatisé', desc: 'Goût au choix, de préférence en usage externe.', heat: 1 },
+      { id: 'x3', name: 'Plume', desc: 'Légère, très légère, et efficace sur la peau.', heat: 1 },
+      { id: 'x4', name: 'Bandeau de soie', desc: 'Pour les yeux ou pour les poignets.', heat: 2 },
+      { id: 'x5', name: 'Bougie de massage', desc: 'Cire à basse température, testée d’abord sur l’avant-bras.', heat: 2 },
+      { id: 'x6', name: 'Jouet vibrant', desc: 'Pour l’un, pour l’autre ou pour les deux en même temps.', heat: 2 },
+      { id: 'x7', name: 'Fessée', desc: 'Du plat de la main, on augmente seulement si l’autre le demande.', heat: 2 },
+      { id: 'x8', name: 'Menottes ou corde', desc: 'Nœuds simples, ciseaux à portée de main, poignets jamais serrés.', heat: 3 },
+      { id: 'x9', name: 'Domination légère', desc: 'Ordres chuchotés, main posée sur la gorge sans jamais serrer.', heat: 3 },
+      { id: 'x10', name: 'Doigts dans l’anus', desc: 'Ongles courts, lubrifiant, et on va doucement, au rythme de l’autre.', heat: 3 },
+      { id: 'x11', name: 'Plug anal', desc: 'Taille adaptée, base évasée, lubrifiant en quantité, on commence petit.', heat: 3 }
+    ]
+  };
+
+  var REWARDS = [
+    { name: 'Massage de 20 minutes', desc: 'Offert par l’autre, sans contrepartie.', cost: 40 },
+    { name: 'Petit-déjeuner au lit', desc: 'Servi avec le sourire.', cost: 80 },
+    { name: 'Soirée au choix de l’autre', desc: 'Film, repas, programme : l’autre décide.', cost: 150 },
+    { name: 'Joker « Je choisis tout »', desc: 'Un menu entier composé par toi seul.', cost: 250 },
+    { name: 'Week-end surprise', desc: 'Une escapade organisée en secret.', cost: 400 },
+    { name: 'Caresses intimes à la demande', desc: 'Un long moment de caresses, quand tu le demandes.', cost: 500 },
+    { name: 'Cuni à la demande', desc: 'Un cuni offert, dès que tu en as envie.', cost: 650 },
+    { name: 'Carte blanche', desc: 'Tu composes la soirée, dans les limites fixées ensemble.', cost: 800 }
+  ];
+
+  var STEPS = [['entree', '1 · Entrée'], ['plat', '2 · Plat'], ['extra', '3 · Extras']];
+  var TITLES = { entree: 'Choisissez vos entrées', plat: 'Choisissez vos plats', extra: 'Ajoutez des extras' };
+  var HINTS = {
+    entree: 'Autant d’entrées que vous voulez. +10 points chacune.',
+    plat: 'Autant de plats que vous voulez. +20 points chacun.',
+    extra: 'Autant que vous voulez, si vous êtes d’accord tous les deux. +5 points chacun.'
+  };
+  var HEADERS = {
+    menu: ['Menu à Deux', 'Entrée, plat, extras : composez votre soirée. Tout est facultatif.'],
+    cart: ['Ma commande', 'Vérifiez ensemble avant d’envoyer.'],
+    points: ['Fidélité', 'Chaque menu rapporte des points à échanger.'],
+    done: ['Bon appétit', 'Votre commande est partie en cuisine.'],
+    history: ['Historique', 'Vos soirées passées et vos récompenses utilisées.']
+  };
+
+  var state = {
+    screen: 'menu', step: 'entree', entrees: [], plats: [], extras: [],
+    points: 0, ack: false, earned: 0, toast: '', confirmReset: false, confirmClearHist: false, surprise: false,
+    history: []
+  };
+  var lastSig = '';
+
+  function cleanList(a) {
+    return Array.isArray(a) ? a.filter(function (s) { return typeof s === 'string'; }).slice(0, 60) : [];
+  }
+  function load() {
+    try {
+      var raw = window.localStorage.getItem(KEY);
+      if (raw) {
+        var o = JSON.parse(raw);
+        state.points = Math.max(0, parseInt(o.points, 10) || 0);
+        state.ack = !!o.ack;
+        if (Array.isArray(o.history)) {
+          state.history = o.history
+            .filter(function (h) { return h && typeof h.t === 'number'; })
+            .slice(0, 200)
+            .map(function (h) {
+              return h.type === 'reward'
+                ? { t: h.t, type: 'reward', name: String(h.name || ''), cost: parseInt(h.cost, 10) || 0 }
+                : { t: h.t, type: 'order', e: cleanList(h.e), p: cleanList(h.p), x: cleanList(h.x), pts: parseInt(h.pts, 10) || 0 };
+            });
+        }
+      }
+    } catch (e) { /* stockage indisponible : l’appli fonctionne quand même */ }
+  }
+  function save() {
+    try {
+      window.localStorage.setItem(KEY, JSON.stringify({ points: state.points, ack: state.ack, history: state.history }));
+    } catch (e) { /* ignoré */ }
+  }
+
+  function esc(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+  function find(list, id) {
+    for (var i = 0; i < list.length; i++) { if (list[i].id === id) return list[i]; }
+    return null;
+  }
+  var SEL = { entree: 'entrees', plat: 'plats', extra: 'extras' };
+  function isOn(step, id) {
+    return state[SEL[step]].indexOf(id) !== -1;
+  }
+  function chosen(step) {
+    return MENU[step].filter(function (x) { return state[SEL[step]].indexOf(x.id) !== -1; });
+  }
+  function names(list) {
+    return list.map(function (x) { return x.name; });
+  }
+  function summary() {
+    var es = chosen('entree'), ps = chosen('plat'), xs = chosen('extra');
+    return {
+      es: es, ps: ps, xs: xs,
+      count: es.length + ps.length + xs.length,
+      pts: es.length * EARN.entree + ps.length * EARN.plat + xs.length * EARN.extra
+    };
+  }
+  function fmt(t) {
+    try {
+      return new Date(t).toLocaleString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+    } catch (e) { return ''; }
+  }
+  function dots(n) {
+    var h = '';
+    for (var i = 1; i <= 3; i++) { h += '<span class="dot' + (i <= n ? ' on' : '') + '"></span>'; }
+    return h;
+  }
+
+  /* ---------- vues ---------- */
+
+  function viewIntro() {
+    return '<div class="intro">' +
+      '<svg width="72" height="72" viewBox="0 0 72 72" aria-hidden="true"><circle cx="26" cy="36" r="18" fill="#E5174F"></circle><circle cx="46" cy="36" r="18" fill="#FFC93C" fill-opacity="0.9"></circle></svg>' +
+      '<h1>Menu à Deux</h1>' +
+      '<p>Un jeu pour couples adultes : on compose sa soirée comme un menu, on gagne des points, on les échange.</p>' +
+      '<ul>' +
+      '<li>Réservé aux personnes de 18 ans et plus.</li>' +
+      '<li>Chaque idée se propose et se valide à deux. Rien n’est obligatoire.</li>' +
+      '<li>Un « stop » de l’un ou de l’autre arrête tout, sans discussion.</li>' +
+      '</ul>' +
+      '<button class="go" data-act="ack" data-key="ack">J’ai 18 ans ou plus, on y va</button>' +
+      '</div>';
+  }
+
+  function header() {
+    var h = HEADERS[state.screen];
+    return '<header class="top"><div class="toprow"><h1>' + esc(h[0]) + '</h1><div class="chip">' + state.points + ' pts</div></div><p>' + esc(h[1]) + '</p></header>';
+  }
+
+  function nav(sum) {
+    function btn(v, label, icon, active, badge) {
+      return '<button class="nb' + (active ? ' act' : '') + '" data-act="go" data-v="' + v + '" data-key="nav-' + v + '"' + (active ? ' aria-current="page"' : '') + '>' +
+        '<span class="ico">' + icon + (badge ? '<span class="badge">' + badge + '</span>' : '') + '</span>' + label + '</button>';
+    }
+    var iMenu = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"></path></svg>';
+    var iCart = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1 12H6L5 8z"></path><path d="M9 8V6a3 3 0 0 1 6 0v2"></path></svg>';
+    var iStar = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9L12 3z"></path></svg>';
+    var iClock = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>';
+    return '<nav class="nav" aria-label="Navigation">' +
+      btn('menu', 'Menu', iMenu, state.screen === 'menu' || state.screen === 'done', 0) +
+      btn('cart', 'Commande', iCart, state.screen === 'cart', sum.count > 0 ? sum.count : 0) +
+      btn('points', 'Fidélité', iStar, state.screen === 'points', 0) +
+      btn('history', 'Historique', iClock, state.screen === 'history', 0) +
+      '</nav>';
+  }
+
+  function viewMenu(sum) {
+    var tabs = STEPS.map(function (s) {
+      return '<button class="tab' + (state.step === s[0] ? ' act' : '') + '" data-act="tab" data-v="' + s[0] + '" data-key="tab-' + s[0] + '">' + s[1] + '</button>';
+    }).join('');
+    var cards = MENU[state.step].map(function (it) {
+      var on = isOn(state.step, it.id);
+      return '<div class="card' + (on ? ' on' : '') + '"><div class="body">' +
+        '<div class="name">' + esc(it.name) + '</div>' +
+        '<div class="desc">' + esc(it.desc) + '</div>' +
+        '<div class="heat">' + dots(it.heat) + '<span class="lbl">' + HEAT[it.heat] + '</span></div>' +
+        '</div><button class="add" data-act="pick" data-v="' + it.id + '" data-key="pick-' + it.id + '" aria-pressed="' + (on ? 'true' : 'false') + '">' + (on ? 'Choisi' : 'Ajouter') + '</button></div>';
+    }).join('');
+    var label = sum.count > 0 ? 'Voir ma commande · ' + sum.count + ' choix' : 'Voir ma commande';
+    return '<div class="tabs">' + tabs + '</div>' +
+      '<div class="main"><div class="sec"><div><h2>' + TITLES[state.step] + '</h2><p class="hint">' + HINTS[state.step] + '</p></div>' +
+      '<button class="ghost" data-act="surprise" data-key="surprise">Menu surprise</button></div>' + cards + '</div>' +
+      '<div class="bar"><button class="cta" data-act="go" data-v="cart" data-key="bar-cart">' + label + '</button></div>';
+  }
+
+  function viewCart(sum) {
+    function row(step, label, value, emptyText, hasValue) {
+      return '<div class="row"><div class="body"><div class="lab">' + label + '</div>' +
+        '<div class="val' + (hasValue ? '' : ' empty') + '">' + esc(hasValue ? value : emptyText) + '</div></div>' +
+        '<button class="edit" data-act="edit" data-v="' + step + '" data-key="edit-' + step + '">' + (hasValue ? 'Modifier' : (step === 'extra' ? 'Ajouter' : 'Choisir')) + '</button></div>';
+    }
+    var none = sum.count === 0;
+    return '<div class="main">' +
+      (state.surprise ? '<div class="banner">Menu surprise tiré au hasard. Changez tout ce qui ne vous tente pas.</div>' : '') +
+      row('entree', 'Entrées', names(sum.es).join(', '), 'Pas encore choisies', sum.es.length > 0) +
+      row('plat', 'Plats', names(sum.ps).join(', '), 'Pas encore choisis', sum.ps.length > 0) +
+      row('extra', 'Extras', names(sum.xs).join(', '), 'Aucun extra', sum.xs.length > 0) +
+      '<div class="earn"><span>Points gagnés avec cette commande</span><b>+' + sum.pts + '</b></div>' +
+      '<button class="cta" data-act="order" data-key="order"' + (none ? ' disabled' : '') + '>' + (none ? 'Choisissez au moins un élément' : 'Envoyer la commande') + '</button>' +
+      '<div class="note"><strong>Le mot d’arrêt</strong><span>Si l’un de vous deux dit « stop » à n’importe quel moment, la commande s’arrête, sans discussion. Chaque extra se propose et se valide à deux.</span></div>' +
+      '</div>';
+  }
+
+  function viewPoints() {
+    var next = null;
+    for (var i = 0; i < REWARDS.length; i++) { if (REWARDS[i].cost > state.points) { next = REWARDS[i]; break; } }
+    var pct = next ? Math.min(100, Math.round(state.points / next.cost * 100)) : 100;
+    var nextText = next ? 'Encore ' + (next.cost - state.points) + ' points pour « ' + next.name + ' »' : 'Toutes les récompenses sont débloquées.';
+    var rewards = REWARDS.map(function (r, idx) {
+      var locked = state.points < r.cost;
+      return '<div class="rw"><div class="body"><div class="name">' + esc(r.name) + '</div><div class="desc">' + esc(r.desc) + '</div><div class="cost">' + r.cost + ' pts</div></div>' +
+        '<button class="use" data-act="use" data-v="' + idx + '" data-key="use-' + idx + '"' + (locked ? ' disabled' : '') + '>' + (locked ? 'Encore ' + (r.cost - state.points) + ' pts' : 'Utiliser') + '</button></div>';
+    }).join('');
+    var reset = state.confirmReset
+      ? '<div class="reset"><p class="next">Effacer tous les points de cette carte ?</p><div class="two"><button class="ghost" data-act="reset-no" data-key="reset-no">Annuler</button><button class="danger" data-act="reset-yes" data-key="reset-yes">Oui, effacer</button></div></div>'
+      : '<div class="reset"><button class="ghost" data-act="reset-ask" data-key="reset-ask">Remettre les points à zéro</button></div>';
+    var install = window.__deferred
+      ? '<button class="ghost" data-act="install" data-key="install">Installer sur ce téléphone</button>'
+      : '';
+    return '<div class="main">' +
+      '<div class="pcard"><div class="lab">Ma carte de fidélité</div><div class="big">' + state.points + ' <small>points</small></div>' +
+      '<div class="track"><div class="fill" style="width:' + pct + '%"></div></div><div class="next">' + esc(nextText) + '</div></div>' +
+      install +
+      (state.toast ? '<div class="toast" role="status">' + esc(state.toast) + '</div>' : '') +
+      '<div class="h3">Récompenses</div>' + rewards + reset + '</div>';
+  }
+
+  function viewHistory() {
+    if (!state.history.length) {
+      return '<div class="main"><div class="note"><strong>Pas encore de commande</strong><span>Votre première commande apparaîtra ici, avec les points gagnés et les récompenses utilisées.</span></div>' +
+        '<button class="cta" data-act="go" data-v="menu" data-key="hist-menu">Composer un menu</button></div>';
+    }
+    var orders = state.history.filter(function (h) { return h.type === 'order'; }).length;
+    var items = state.history.map(function (h) {
+      if (h.type === 'reward') {
+        return '<div class="hist"><div class="hrow"><span class="when">' + esc(fmt(h.t)) + '</span><span class="pts out">−' + h.cost + ' pts</span></div>' +
+          '<div class="hl"><b>Récompense</b>' + esc(h.name) + '</div></div>';
+      }
+      var lines = '';
+      if (h.e.length) { lines += '<div class="hl"><b>Entrées</b>' + esc(h.e.join(', ')) + '</div>'; }
+      if (h.p.length) { lines += '<div class="hl"><b>Plats</b>' + esc(h.p.join(', ')) + '</div>'; }
+      if (h.x.length) { lines += '<div class="hl"><b>Extras</b>' + esc(h.x.join(', ')) + '</div>'; }
+      return '<div class="hist"><div class="hrow"><span class="when">' + esc(fmt(h.t)) + '</span><span class="pts">+' + h.pts + ' pts</span></div>' + lines + '</div>';
+    }).join('');
+    var clear = state.confirmClearHist
+      ? '<div class="reset"><p class="next">Effacer tout l’historique ? Vos points ne changent pas.</p><div class="two"><button class="ghost" data-act="hclear-no" data-key="hclear-no">Annuler</button><button class="danger" data-act="hclear-yes" data-key="hclear-yes">Oui, effacer</button></div></div>'
+      : '<div class="reset"><button class="ghost" data-act="hclear-ask" data-key="hclear-ask">Effacer l’historique</button></div>';
+    return '<div class="main"><p class="hint">' + orders + (orders > 1 ? ' commandes' : ' commande') + ' au total.</p>' + items + clear + '</div>';
+  }
+
+  function viewDone() {
+    return '<div class="done">' +
+      '<svg width="88" height="88" viewBox="0 0 88 88" fill="none" aria-hidden="true"><circle cx="44" cy="44" r="40" stroke="#E5174F" stroke-width="6"></circle><path d="M27 45l12 12 22-26" stroke="#E5174F" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"></path></svg>' +
+      '<h2>Commande envoyée</h2><p>Prenez votre temps, on ne chronomètre rien.</p>' +
+      '<div class="pill">+' + state.earned + ' points sur votre carte</div>' +
+      '<button class="cta fit" data-act="go" data-v="menu" data-key="again">Retour au menu</button></div>';
+  }
+
+  /* ---------- rendu ---------- */
+
+  function render() {
+    var app = document.getElementById('app');
+    var prevMain = app.querySelector('.main, .done, .intro');
+    var prevScroll = prevMain ? prevMain.scrollTop : 0;
+    var ae = document.activeElement;
+    var focusKey = ae && ae.getAttribute ? ae.getAttribute('data-key') : null;
+
+    var html;
+    if (!state.ack) {
+      html = viewIntro();
+    } else {
+      var sum = summary();
+      var body = state.screen === 'menu' ? viewMenu(sum)
+        : state.screen === 'cart' ? viewCart(sum)
+        : state.screen === 'points' ? viewPoints()
+        : state.screen === 'history' ? viewHistory()
+        : viewDone();
+      html = header() + body + nav(sum);
+    }
+    app.innerHTML = html;
+
+    var sig = (state.ack ? state.screen : 'intro') + ':' + state.step;
+    var main = app.querySelector('.main, .done, .intro');
+    if (main && sig === lastSig) { main.scrollTop = prevScroll; }
+    lastSig = sig;
+
+    if (focusKey) {
+      var el = app.querySelector('[data-key="' + focusKey + '"]');
+      if (el && !el.disabled) { try { el.focus({ preventScroll: true }); } catch (e) { el.focus(); } }
+    }
+  }
+
+  /* ---------- actions ---------- */
+
+  function pick(id) {
+    state.surprise = false;
+    var list = state[SEL[state.step]];
+    var i = list.indexOf(id);
+    if (i === -1) { list.push(id); } else { list.splice(i, 1); }
+    render();
+  }
+
+  function surprise() {
+    function rnd(list) { return list[Math.floor(Math.random() * list.length)]; }
+    state.entrees = [rnd(MENU.entree).id];
+    state.plats = [rnd(MENU.plat).id];
+    var pool = MENU.extra.slice();
+    var n = 1 + Math.floor(Math.random() * 2);
+    state.extras = [];
+    while (n > 0 && pool.length) {
+      state.extras.push(pool.splice(Math.floor(Math.random() * pool.length), 1)[0].id);
+      n--;
+    }
+    state.surprise = true;
+    state.screen = 'cart';
+    render();
+  }
+
+  function order() {
+    var sum = summary();
+    if (sum.count === 0) return;
+    state.points += sum.pts;
+    state.earned = sum.pts;
+    state.history.unshift({ t: Date.now(), type: 'order', e: names(sum.es), p: names(sum.ps), x: names(sum.xs), pts: sum.pts });
+    state.history = state.history.slice(0, 200);
+    state.entrees = []; state.plats = []; state.extras = [];
+    state.step = 'entree'; state.surprise = false; state.toast = '';
+    state.screen = 'done';
+    save();
+    render();
+  }
+
+  document.getElementById('app').addEventListener('click', function (ev) {
+    var t = ev.target && ev.target.closest ? ev.target.closest('[data-act]') : null;
+    if (!t || t.disabled) return;
+    var act = t.getAttribute('data-act');
+    var v = t.getAttribute('data-v');
+    if (act === 'ack') { state.ack = true; save(); render(); }
+    else if (act === 'go') { state.screen = v; state.toast = ''; state.confirmReset = false; state.confirmClearHist = false; render(); }
+    else if (act === 'tab') { state.step = v; render(); }
+    else if (act === 'pick') { pick(v); }
+    else if (act === 'edit') { state.screen = 'menu'; state.step = v; render(); }
+    else if (act === 'surprise') { surprise(); }
+    else if (act === 'order') { order(); }
+    else if (act === 'use') {
+      var r = REWARDS[parseInt(v, 10)];
+      if (r && state.points >= r.cost) {
+        state.points -= r.cost;
+        state.history.unshift({ t: Date.now(), type: 'reward', name: r.name, cost: r.cost });
+        state.history = state.history.slice(0, 200);
+        state.toast = '« ' + r.name + ' » utilisé. À vous de jouer.';
+        save();
+        render();
+      }
+    }
+    else if (act === 'reset-ask') { state.confirmReset = true; render(); }
+    else if (act === 'reset-no') { state.confirmReset = false; render(); }
+    else if (act === 'reset-yes') { state.points = 0; state.confirmReset = false; state.toast = ''; save(); render(); }
+    else if (act === 'hclear-ask') { state.confirmClearHist = true; render(); }
+    else if (act === 'hclear-no') { state.confirmClearHist = false; render(); }
+    else if (act === 'hclear-yes') { state.history = []; state.confirmClearHist = false; save(); render(); }
+    else if (act === 'install') {
+      var d = window.__deferred;
+      if (d && d.prompt) {
+        d.prompt();
+        window.__deferred = null;
+        render();
+      }
+    }
+  });
+
+  window.addEventListener('installready', render);
+  window.addEventListener('installdone', render);
+
+  load();
+  render();
+})();
+</script>
+<!--PWA-ONLY-START-->
+<script>
+(function () {
+  if ('serviceWorker' in navigator && location.protocol.indexOf('http') === 0) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('./sw.js').catch(function () {});
+    });
+  }
+  window.addEventListener('beforeinstallprompt', function (e) {
+    e.preventDefault();
+    window.__deferred = e;
+    window.dispatchEvent(new Event('installready'));
+  });
+  window.addEventListener('appinstalled', function () {
+    window.__deferred = null;
+    window.dispatchEvent(new Event('installdone'));
+  });
+})();
+</script>
+<!--PWA-ONLY-END-->
+</body>
+</html>
